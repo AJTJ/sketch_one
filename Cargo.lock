@@ -1827,6 +1827,7 @@ name = "sketch_one"
 version = "0.1.0"
 dependencies = [
  "nannou",
+ "rand 0.8.4",
 ]
 
 [[package]]
