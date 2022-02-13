@@ -1,3 +1,6 @@
+use std::time::Duration;
+
+use nannou::app::LoopMode::*;
 use nannou::prelude::*;
 use rand::prelude::*;
 
@@ -5,7 +8,6 @@ fn main() {
     nannou::app(model)
         .update(update)
         .simple_window(view)
-        // this makes it tiny, for when it first appears on-screen so as not to distract
         .size(1, 1)
         .run();
 }
@@ -17,30 +19,27 @@ fn model(_app: &App) -> Model {
 }
 
 fn update(app: &App, _model: &mut Model, _update: Update) {
-    // list available monitors
-    // let r = app.available_monitors();
-    // println!("{:?}", r);
-
     // move it to the corner of the screen
     app.main_window().set_outer_position_pixels(0, 0);
     // resize it so that it is now visible
     app.main_window().set_inner_size_pixels(1000, 1000);
-
-    // set it fullscreen
-    // app.main_window().set_fullscreen(true);
 }
+
+// set it fullscreen
+// app.main_window().set_fullscreen(true);
+// list available monitors
+// let r = app.available_monitors();
+// println!("{:?}", r);
 
 fn get_color(time: f32) -> Rgba {
     let mut rng = rand::thread_rng();
     // let ran: f32 = rng.gen_range(0..100) as f32;
     // println!("{}", ran);
+
     rgba(
-        // (rng.gen_range(0..1000) as f32) / 1000.0,
-        // (rng.gen_range(0..1000) as f32) / 1000.0,
-        // (rng.gen_range(0..1000) as f32) / 1000.0,
-        (time % 1000.0) / 1000.0,
-        (time % 500.0) / 1000.0,
-        (time % 800.0) / 1000.0,
+        (time / 1000.0).sin() + 0.5,
+        ((time + 200.0) / 800.0).sin() + 0.5,
+        ((time + 150.0) / 700.0).sin() + 0.5,
         1.0,
     )
 }
@@ -64,7 +63,7 @@ fn view(app: &App, _model: &Model, frame: Frame) {
     // draw.background().color(PLUM);
     draw.ellipse()
         .color(get_color(app.duration.since_start.as_millis() as f32))
-        .x_y(sine_x, slow_sine_y);
+        .x_y(app.mouse.x, app.mouse.y);
 
     draw.to_frame(app, &frame).unwrap();
 }
